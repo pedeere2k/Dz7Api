@@ -1,7 +1,7 @@
 <div align="center">
 
-# 🌐 **Dz7Api – Api Pública para Estudos e Modificações**
-### 🚀 50+ Rotas | 🛠 Consultas | 📥 Downloads | 📚 Animes | 🎮 Clash Royale | 🔧 Ferramentas
+# 🌐 **Dz7Api – Api para Estudos e Modificações**
+### 50+ Rotas | 🛠 Consultas | 📥 Downloads | 📚 Animes | 🎮 Clash Royale | 🔧 Ferramentas
 
 ![Status](https://img.shields.io/badge/STATUS-ATIVO-success?style=for-the-badge)
 ![Node](https://img.shields.io/badge/NODEJS-18+-blue?style=for-the-badge&logo=node.js)
