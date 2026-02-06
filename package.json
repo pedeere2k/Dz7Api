@@ -1,0 +1,27 @@
+{
+  "name": "Dz7Api",
+  "version": "1.0.0",
+  "description": "Api Para Estudo, Suorce Liberada",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@napi-rs/canvas": "^0.1.88",
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.3",
+    "express": "^4.22.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "hybrid-ytdl": "^1.2.4",
+    "jimp": "^0.16.1",
+    "jsonwebtoken": "^9.0.2",
+    "puppeteer-core": "^24.35.0",
+    "scdl-core": "^1.1.0",
+    "soundcloud-downloader": "^1.0.0",
+    "yt-search": "^2.13.1",
+    "ytdl-core": "^4.11.5"
+  }
+}

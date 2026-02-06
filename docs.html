@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dz7Api - API completa para downloads, pesquisas e integrações">
+    <meta name="author" content="pdr2k">
+    <title>Dz7Api - API Documentation</title>
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        
+        
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #ff4fa8;
+            --primary-dark: #e63989;
+            --primary-light: #ff72c9;
+            --secondary: #8b5cf6;
+            --background: #0a0a0f;
+            --surface: rgba(20, 20, 30, 0.85);
+            --surface-light: rgba(30, 30, 45, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: #b4b4c8;
+            --border: rgba(255, 79, 168, 0.2);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -3;
+            opacity: 0.3;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(20, 0, 28, 0.92) 100%);
+            backdrop-filter: blur(8px);
+            z-index: -2;
+        }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--success);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .menu-btn {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .menu-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: var(--surface);
+            backdrop-filter: blur(30px);
+            border-left: 2px solid var(--border);
+            padding: 2rem;
+            overflow-y: auto;
+            z-index: 200;
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sidebar.open {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .close-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+        
+        .menu-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .menu-section-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .menu-section-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+        
+        .menu-section-btn .icon {
+            font-size: 1.2rem;
+        }
+        
+        .menu-links {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding-left: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .menu-links.open {
+            max-height: 2000px;
+        }
+        
+        .menu-links a {
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-links a:hover {
+            color: var(--primary);
+            background: rgba(255, 79, 168, 0.1);
+            border-left-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 150;
+            transition: opacity 0.3s ease;
+        }
+        
+        .blur-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            padding: 100px 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .hero-description {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 79, 168, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stat-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.125rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 79, 168, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+        
+        .feature-count {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 79, 168, 0.1);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .footer-text {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-credit {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 1rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
+            }
+            
+            .status-badge {
+                display: none;
+            }
+            
+            .sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .stats-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 90px 1rem 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video class="bg-video" autoplay muted loop playsinline>
+        <source src="https://files.catbox.moe/jfk6az.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    
+    <header class="header">
+        <div class="logo-section">
+            <img src="https://files.catbox.moe/ldelen.jpg" alt="Dz7Api Logo" class="logo-icon">
+            <div class="logo-text">Dz7Api</div>
+        </div>
+        
+        <div class="header-actions">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="statusText">API Online</span>
+            </div>
+            <div class="menu-btn" onclick="toggleMenu()">
+                ☰
+            </div>
+        </div>
+    </header>
+    
+    <div class="blur-overlay" id="blurOverlay" onclick="closeMenu()"></div>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Documentação API</h2>
+            <button class="close-btn" onclick="closeMenu()">×</button>
+        </div>
+
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('download')">
+                <span>📥 Downloads</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="download">
+                <a href="/api/download/instagram?url=https://www.instagram.com/reel/DTcAPR6jKeP/?igsh=MTVmOHNrbnprdjBieA==&apikey=SuaKey">Instagram Download</a>
+                <a href="/api/download/tiktok?url=https://vt.tiktok.com/ZS5KmkmJD/&apikey=SuaKey">TikTok Download</a>
+                <a href="/api/download/youtube/mp3?url=https://youtu.be/R2jF5_FuQA0?si=8n5NqjbeR1oErx0l&apikey=SuaKey">YouTube MP3</a>
+                <a href="/api/download/youtube/mp4?url=https://youtu.be/R2jF5_FuQA0?si=8n5NqjbeR1oErx0l&apikey=SuaKey">YouTube MP4</a>
+                <a href="/api/download/soundcloud?url=LINK&apikey=SuaKey">SoundCloud Download</a>
+                <a href="/api/download/pinterest/video?url=LINK&apikey=SuaKey">Pinterest Video</a>
+                <a href="/api/download/threads?url=LINK&apikey=SuaKey">Threads Download</a>
+                <a href="/api/download/twitch/clip?url=LINK&apikey=SuaKey">Twitch Clip</a>
+                <a href="/api/download/reddit?url=URL&apikey=SuaKey">Reddit Download</a>
+                <a href="/api/download/kwai?url=LINK&apikey=pdr2k">Kwai Download</a>
+                <a href="/api/download/twitter?url=LINK&apikey=SuaKey">Twitter Download</a>
+                <a href="/api/download/facebook?url=LINK&apikey=SuaKey">Facebook Download</a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('search')">
+                <span>🔍 Pesquisas</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="search">
+                <a href="/api/search/youtube?q=mc poze&apikey=SuaKey">YouTube Search</a>
+                <a href="/api/search/tiktok?q=enaldinho&apikey=SuaKey">TikTok Search</a>
+                <a href="/api/search/pinterest?q=gato&apikey=SuaKey">Pinterest Search</a>
+                <a href="/api/tiktok/user?user=neymarjr&apikey=SuaKey">TikTok User Info</a>
+                <a href="/api/search/soundcloud?q=holf&apikey=SuaKey">SoundCloud Search</a>
+                <a href="/api/search/youtube/playlist?q=punk&apikey=SuaKey">YouTube Playlist</a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('clash')">
+                <span>👑 Clash Royale</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="clash">
+                <a href="/api/clash/perfil?tag=%23SuaTag&apikey=SuaKey">Perfil Info</a>
+                <a href="/api/clash/clan?tag=%23SuaTag&apikey=SuaKey">Clã Info</a>
+                <a href="/api/clash/chests?tag=SuaTag&apikey=SuaKey">Baús</a>
+                <a href="/api/clash/battlelog?tag=SuaTag&apikey=SuaKey">Histórico de Batalhas</a>
+                <a href="/api/clash/cards&apikey=SuaKey">Cartas</a>
+                <a href="/api/clash/top/global&apikey=SuaKey">Top Global</a>
+                <a href="/api/clash/top/brasil&apikey=Suakey">Top Brasil</a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('animes')">
+                <span>🎌 Animes</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="animes">
+                <a href="/api/anime/search?q=naruto&apikey=SuaKey">Anime Search</a>
+                <a href="/api/anime/images?q=naruto&apikey=SuaKey">Imagens Anime</a>
+                <a href="/api/anime/gifs?q=naruto&apikey=SuaKey">Anime GIFs</a>
+                <a href="/api/anime/character?apikey=SuaKey">Personagem Anime</a>
+                <a href="/api/anime/waifu?apikey=SuaKey">Waifu Aleatório</a>
+                <a href="/api/anime/manga?apikey=SuaKey">Manga Info</a>
+                <a href="/api/anime/fact?apikey=SuaKey">Fatos sobre Anime</a>
+                <a href="/api/anime/opening?anime=naruto&apikey=SuaKey">Opening Anime</a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('consultas')">
+                <span>📋 Consultas</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="consultas">
+                <a href="/api/consultas/cep2?cep=SeuCep&apikey=SuaKey">Consulta CEP</a>
+                <a href="/api/consultas/cep?cep=SeuCep&apikey=SuaKey">Consulta CEP v2</a>
+                <a href="/api/consulta/cnpj?cnpj=SeuCnpj&apikey=SuaKey">Consulta CNPJ</a>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-section-btn" onclick="toggleSection('tools')">
+                <span>🛠️ Ferramentas</span>
+                <span class="icon">›</span>
+            </button>
+            <div class="menu-links" id="tools">
+                <a href="/api/tools/ipinfo?ip=8.8.8.8&apikey=SuaKey">IP Info</a>
+                <a href="/api/tools/shorturl?url=https://google.com&apikey=SuaKey">Encurtador de URL</a>
+                <a href="/stalktiktok?user=Username&apikey=SuaKey">Stalk TikTok</a>
+                <a href="/api/flodngl?username=Username&mensagem=Mensagem&quantidade=Quantidade&apikey=SuaKey">Flood NGL</a>
+                <a href="/api/ferramentas/stalkff?id=10258298546&apikey=SuaKey">Stalk Free Fire</a>
+                <a href="/api/ferramentas/stalkinsta?username=pdr26k&apikey=SuaKey">Stalk Instagram</a>
+                <a href="/api/ferramentas/operadora?numero=11948846259&apikey=SuaKey">Info Operadora</a>
+            </div>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h1 class="hero-title">Dz7Api</h1>
+                <p class="hero-subtitle">API completa para downloads, pesquisas e integrações</p>
+                <p class="hero-description">
+                    Uma API moderna e completa com diversos endpoints para downloads de redes sociais, 
+                    pesquisas, informações de jogos, animes e muito mais. Desenvolvida com foco em 
+                    performance, estabilidade e facilidade de uso.
+                </p>
+            </section>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-label">Horário Atual</div>
+                    <div class="stat-value" id="hora">--:--:--</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Total de Visitantes</div>
+                    <div class="stat-value" id="visitas">...</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-label">Status da API</div>
+                    <div class="stat-value" id="statusApi">Verificando...</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-label">Endpoints</div>
+                    <div class="stat-value">50+</div>
+                    <div class="stat-description">Diversos endpoints disponíveis</div>
+                </div>
+            </div>
+            
+            <section>
+                <h2 class="section-title">Principais Recursos</h2>
+                <p class="section-subtitle">Explore todas as funcionalidades da nossa API</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📥</div>
+                        <h3 class="feature-title">Downloads</h3>
+                        <p class="feature-description">
+                            Baixe vídeos e áudios de diversas plataformas como Instagram, TikTok, 
+                            YouTube, Twitter, Facebook e muito mais.
+                        </p>
+                        <span class="feature-count">12 plataformas</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3 class="feature-title">Pesquisas</h3>
+                        <p class="feature-description">
+                            Realize buscas em diferentes plataformas, obtenha informações de 
+                            usuários e playlists de forma simples e rápida.
+                        </p>
+                        <span class="feature-count">6 tipos</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👑</div>
+                        <h3 class="feature-title">Clash Royale</h3>
+                        <p class="feature-description">
+                            Acesse informações completas de perfis, clãs, rankings e histórico 
+                            de batalhas do Clash Royale.
+                        </p>
+                        <span class="feature-count">7 endpoints</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎌</div>
+                        <h3 class="feature-title">Animes & Mangás</h3>
+                        <p class="feature-description">
+                            Busque animes, personagens, waifus, mangás, GIFs e muito mais 
+                            relacionado ao mundo dos animes.
+                        </p>
+                        <span class="feature-count">8 recursos</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3 class="feature-title">Consultas</h3>
+                        <p class="feature-description">
+                            Consulte informações de CEP e CNPJ de forma rápida e precisa 
+                            com dados sempre atualizados.
+                        </p>
+                        <span class="feature-count">3 tipos</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🛠️</div>
+                        <h3 class="feature-title">Ferramentas</h3>
+                        <p class="feature-description">
+                            Utilize diversas ferramentas como stalker de redes sociais, 
+                            encurtador de URL, informações de IP e muito mais.
+                        </p>
+                        <span class="feature-count">7+ ferramentas</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="footer">
+        <p class="footer-text">
+            © 2026 <span class="footer-credit">Dz7Api</span> Leia Os Direitos
+        </p>
+        <p>Desenvolvida por pdr</p>
+    </footer>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const blurOverlay = document.getElementById("blurOverlay");
+
+        function toggleMenu() {
+            sidebar.classList.toggle("open");
+            blurOverlay.classList.toggle("active");
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove("open");
+            blurOverlay.classList.remove("active");
+        }
+
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle("open");
+        }
+
+        
+        setInterval(() => {
+            const horaEl = document.getElementById("hora");
+            if (horaEl) {
+                horaEl.innerText = new Date().toLocaleTimeString("pt-BR");
+            }
+        }, 1000);
+
+        
+        
+        const statusApi = document.getElementById("statusApi");
+        if (statusApi) {
+            statusApi.innerText = "Online";
+            statusApi.style.color = "#10b981";
+        }
+        
+        
+        
+  fetch('/stats/visitantes')
+  .then(r => r.json())
+  .then(d => visitas.innerText = d.total)
+    </script>
+
+</body>
+</html>
