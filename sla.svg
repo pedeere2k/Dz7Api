@@ -1,0 +1,32 @@
+<svg width="400" height="70" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .wrapper {
+      animation: slide 6s infinite;
+    }
+
+    @keyframes slide {
+      0%   { transform: translateY(0); opacity: 1; }
+      20%  { transform: translateY(-60px); opacity: 0; }
+      25%  { transform: translateY(60px); opacity: 0; }
+      45%  { transform: translateY(0); opacity: 1; }
+
+      50%  { transform: translateY(0); opacity: 1; }
+      70%  { transform: translateY(-60px); opacity: 0; }
+      75%  { transform: translateY(60px); opacity: 0; }
+      95%  { transform: translateY(0); opacity: 1; }
+    }
+
+    text {
+      font-size: 32px;
+      fill: #8A2BE2;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+  </style>
+
+  <g class="wrapper">
+    <text x="20" y="50">pdr</text>
+    <text x="20" y="110">developer</text>
+    <text x="20" y="170">sla</text>
+  </g>
+</svg>
